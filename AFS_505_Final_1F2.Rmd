@@ -1,0 +1,154 @@
+---
+title: "AFS_505_Final_1"
+author: "Paul Martinez"
+date: "2022-09-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# {.tabset}
+## Question 1
+``` {r question 1}
+#What are the basic R data structures? What are the differences between them? In what context would you use one versus the other? 
+
+#The basic R data structures are vectors, matrix, data frames, list, and factors.  I think of vectors as a string of single values or characters.Matrices are vectors with rows and columns (dimensions), and they need to be the same data type. A list is a type of data that is composed of an array of various data structures.The data type of the elements in the list do not have to be the same. Data frames,are composed of list that have the same length. Unlike matrices, the data type in data frames does not have to be the same. Lastly, factors are similar to character data type but have levels. This means that the inputs in factors cannot be outside the determined levels. 
+
+``` 
+
+## Question 2-a
+
+```{r Question 2}
+setwd("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults")
+getwd()
+#a
+files<-list.files(pattern="*.csv",full.names = T,recursive = T)
+files #pulled out the locations of the files.
+
+#tried creating a loop: 
+
+#file_content<-list()
+#for(i in 1:length(files)){
+  #file_content[[i]]<-read.csv(
+  #file=files[[i]])
+ #}
+#file_content<-setNames(file_content,files)
+#file_content[[1]]
+
+#The loop gave me a list of the data frames needed but I could not figure out how to use the list of data frames that I got from my loop for the other tasks such as merging, adding columns, etc. Therefore,I just did it the long way. :} 
+data1 <-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/Okanogan/Corn_grain/48.15625N119.71875W/seasonal_result.csv")
+data2 <-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/Okanogan/Corn_grain/48.96875N119.65625W/seasonal_result.csv" )
+data3<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/Okanogan/Winter_Wheat/48.15625N119.71875W/seasonal_result.csv")
+data4<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/Okanogan/Winter_Wheat/48.53125N119.59375W/seasonal_result.csv")
+data5<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/WallaWalla/Corn_grain/46.03125N118.21875W/seasonal_result.csv")
+data6<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/WallaWalla/Corn_grain/46.28125N118.65625W/seasonal_result.csv" )
+data7<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/WallaWalla/Winter_Wheat/46.03125N118.21875W/seasonal_result.csv")
+data8<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/WallaWalla/Winter_Wheat/46.03125N118.40625W/seasonal_result.csv")
+data9<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/Yakima/Corn_grain/46.15625N119.96875W/seasonal_result.csv")
+data10<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/Yakima/Corn_grain/46.21875N119.34375W/seasonal_result.csv")
+data11<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/Yakima/Winter_Wheat/46.15625N119.34375W/seasonal_result.csv")
+data12<-read.csv("C:/Users/paulm/Documents/AFS505_F22/Final/CropModelResults/CropModelResults/Yakima/Winter_Wheat/46.21875N119.34375W/seasonal_result.csv")
+```
+## Question 2-b
+
+```{r question 2 part b}
+#b - added columns with the corresponding information to each data frame.Also, combined individual data frames into one.
+data1<-cbind(data1,county="Okanogan",crop="corn",lat="48.15625N",long="119.71875W")
+data2<-cbind(data2,county="Okanogan",crop="corn",lat="48.96875N",long="119.65625W")
+data3<-cbind(data3,county="Okanogan",crop="wheat",lat="48.15625N",long="119.71875W")
+data4<-cbind(data4,county="Okanogan",crop="wheat",lat="48.53125N",long="119.59375W")
+data5<-cbind(data5,county="WallaWalla",crop="corn",lat="46.03125N",long="118.21875W")
+data6<-cbind(data6,county="WallaWalla",crop="corn",lat="46.28125N",long="118.65625W")
+data7<-cbind(data7,county="WallaWalla",crop="wheat",lat="46.03125N",long="118.21875W")
+data8<-cbind(data8,county="WallaWalla",crop="wheat",lat="46.03125N",long="118.40625W")
+data9<-cbind(data9,county="Yakima",crop="corn",lat="46.15625N",long="119.96875W")
+data10<-cbind(data10,county="Yakima",crop="corn",lat="46.21875N",long="119.34375W")
+data11<-cbind(data11,county="Yakima",crop="wheat",lat="46.15625N",long="119.34375W")
+data12<-cbind(data12,county="Yakima",crop="wheat",lat="46.21875N",long="119.34375W")
+
+final_data<-rbind(data1,data2,data3,data4,data5,data6,data7,data8,data9,data11,data12)
+#final_data
+
+```
+## Question 2-c
+
+```{r question2 part c}
+#c - Changed name of columns and wrote/exported a .csv file for the merged data frame. 
+names(final_data)[names(final_data) == "irrig"] <- "irrigation_demand"
+names(final_data)[names(final_data) == "precip"] <- "precipitation"
+
+write.csv(final_data,file = "final_data.csv")
+
+```
+
+## Question 2-d
+
+```{r question 2 part d}
+#d - created a summary table for the average irrigation demand for all crops and counties using the do.call and aggregate fucntions. Lastly I changed the columns. 
+data_summary <- do.call(data.frame, 
+                         aggregate(irrigation_demand ~ crop+county,
+                                   final_data,
+                                   FUN = function(x) summary(x)))
+colnames(data_summary) <- c("crop","county", "my_min", "1stQ", "my_median", "my_mean","3rdQ","my_max")
+data_summary   
+```
+## Question 2-e
+
+```{r Question 2 part e}
+#e - seperated the dates given in files by year, month, and day. Then used that data new data frame and created another one for Walla, wheat, and requested latitude and longitude. Used that data frame (wall_sub_sep) to created subsets for the grouped years. Calculated the average yields in the grouped years. Lastly, I created a table to read a little easier. 
+
+library(tidyr)
+final_data_sep<-separate(final_data, "YYYY.MM.DD.DOY.", c("year", "month", "day"), sep = "-")
+                         
+walla_sub_sep<- final_data_sep[(final_data_sep$county =="WallaWalla") & (final_data_sep$crop =="wheat") & (final_data_sep$lat=="46.03125N")&(final_data_sep$long=="118.40625W"),]
+
+#walla_sub_sep
+                               
+decade1<-subset(walla_sub_sep,subset=c(year >1980 & year<1991))
+decade2<-subset(walla_sub_sep,subset=c(year > 1990 & year<2001))
+decade3<-subset(walla_sub_sep,subset=c(year>2002 & year < 2020))
+
+mean_8190<-mean(decade1$yield)
+mean_9100<-mean(decade2$yield)
+mean_0119<-mean(decade3$yield)
+
+average_yields<-data.frame(mean_8190,mean_9100,mean_0119)
+colnames(average_yields) <- c("mean 1980-1990","mean 1991-2000","mean 2001-2019")
+average_yields
+
+#The average yield of Winter Wheat in Walla Walla at 46.03125N 118.40625W for the year ranges (1981-1990), (1991-2000), and (2001-2019) were repectively 8189.245 , 8471.867, 8382.243, respectively (not sure what units...)
+```
+## Question 2-f
+
+```{r Question 2 part f}
+#f - created subset for range of years requested. Used the aggregate function to calculate the mean yield for county and crop in the newly created subset. Lastly, created a table and adapted the column names. 
+
+final_0119<-subset(final_data_sep,subset=c(year>2002 & year < 2020))
+
+final_0119_county<-aggregate(final_0119$yield, list(final_0119$county,final_0119$crop), FUN=mean)
+colnames(final_0119_county) <- c("Location","Crop","Mean")
+final_0119_county
+
+#Okanogan had the largest corn yield on average through 2001-2019.
+
+```
+## Question 3
+
+```{r Question 3}
+#Was the data provided to you well described ? If not, what information was missing?Comment on what kind of metadata (description about the data) should be included as best practice while sharing datasets?
+
+# The data was not provided well described. For me, the units were missing for some of the data (yields, precipitation, irrigation demand). Also, I would like to get an abstract for the data for better analysis. Experimental design details are important while sharing/collaborating. Lastly, the files could have been label better and organized differently for easier access. 
+
+```
+## Question 4 E.C.
+
+```{r Question 4 Extra Credit}
+#Create an R Markdown file with different tabs for each of the six parts of question 2. In a seventh tab add the Github link which has your R script/ R markdown file and the csv file generated from 2 (c).
+```
+
+
